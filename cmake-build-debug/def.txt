@@ -1,0 +1,6 @@
+PlayerX:i=640
+PlayerY:i=360
+Player1:s=!NULL
+Player2:s=NULL
+Player3:s=NULL
+Player4:s=NULL

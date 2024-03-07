@@ -5,6 +5,8 @@
 #include "Entities/Player.h"
 #include "Assets/StorageUnit.h"
 
+#define MULTI 4
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_DESTROY:
@@ -13,9 +15,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
         case WM_COMMAND:
             MessageBox(NULL, "Button Clicked!", "Message", MB_OK);
-
-            // Modify pixel at position (10, 10) when the button is clicked
-            draw_red_pixel(hwnd, 10, 10);
 
             return 0;
 
@@ -28,22 +27,18 @@ int main() {
 
     printf("Press any key (ESC to exit):\n");
 
-    struct StorageUnit *su;
+    StorageUnit *su = (StorageUnit*)malloc(sizeof(StorageUnit));
     init_su(su);
-//    icram(su, 18, "age");
-//    fcram(su, 3.7, "gpa");
-//    scram(su, "hunter", "name");
-//    scram(su, "m", "gender");
-//    printf("key age, value: %d\n", unit_getint(su, "age"));
-//    printf("key gpa, value: %f\n", unit_getfloat(su, "gpa"));
-//    printf("key name, value %s\n", unit_getstr(su, "name"));
-//    printf("key gender, value %s\n", unit_getstr(su, "gender"));
+    load_file(su, "def.txt");
+    load_file(su, "asciibinds.txt");
 
-    struct PlayingField playing_field;
-    init_game(&playing_field);
+    Player *i = (Player*)malloc(sizeof(Player));
+    Start$P(i, su);
 
-    struct Player i;
-    init_player(&i);
+    PlayingField playing_field;
+    init_game(&playing_field, su, i);
+
+    //print_unit(su);
 
     // {
 
@@ -94,39 +89,26 @@ int main() {
         for (int key = 0; key <= 255; ++key) {
             if (GetAsyncKeyState(key) & 0x8000) {
                 if (key == VK_ESCAPE) {
-                    printf("ESC key pressed. Exiting.\n");
+                    free_storage_unit(su);
+                    free_player(i);
                     return 0;
                 }
 
                 inpkey[0] = (char)key;
-                asckey = key;
 
-                printf("Key pressed: %c\nKey value pressed:%d\n", inpkey[0], asckey);
+                //printf("Key pressed: %c\nKey value pressed:%d\n", inpkey[0], asckey);
+                std_input(i, key);
             }
         }
 
-        switch(asckey){
-            case 65 :
-                printf("Moving left\n");
-                break;
-            case 68 :
-                printf("Moving right\n");
-                break;
-            case 83 :
-                printf("Moving down\n");
-                break;
-            case 87 :
-                printf("Moving up\n");
-                break;
-            case 32 :
-                printf("Jumping\n");
-                break;
-        }
+        Update$PF(&playing_field, &hwnd);
 
-        make(&playing_field);
+        Update$P(i);  // final Player update
     }
 
     // }
 
+    free_storage_unit(su);
+    free_player(i);
     return 0; // just in case ;)
 }

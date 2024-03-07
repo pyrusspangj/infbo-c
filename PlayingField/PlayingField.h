@@ -2,26 +2,38 @@
 // Created by hunte on 3/3/2024.
 //
 
-#include "windows.h"
-
 #ifndef INFBOC_PLAYINGFIELD_H
 #define INFBOC_PLAYINGFIELD_H
 
-struct PlayingField {
+#include "windows.h"
+#include "../Assets/StorageUnit.h"
+#include "../Entities/Player.h"
 
-    int test_value;
+#define MULTI 4
+
+typedef struct {
+
     struct PlayingField *previous;
     int width, height;
+    HWND hwnd;
 
-};
+    Player *player;
 
-int get_width(struct PlayingField *first);
-int get_height(struct PlayingField *first);
-void set_width(struct PlayingField *first, int val);
-void set_height(struct PlayingField *first, int val);
+    StorageUnit *su;
 
-void draw_red_pixel(HWND hwnd, int x, int y);
-void init_game(struct PlayingField *first);
-void make(struct PlayingField *pf);
+} PlayingField;
+
+int get_width(PlayingField *first);
+int get_height(PlayingField *first);
+void set_width(PlayingField *first, int val);
+void set_height(PlayingField *first, int val);
+
+void draw_red_pixel(HWND *hwnd, int x, int y);
+void init_game(PlayingField *first, StorageUnit *su, Player *i);
+void make(PlayingField *pf);
+
+// Player Interaction
+void move(Player *p, HWND *hwnd);
+void Update$PF(PlayingField *pf, HWND *hwnd);
 
 #endif //INFBOC_PLAYINGFIELD_H

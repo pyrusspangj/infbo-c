@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <limits.h>
 
-struct StorageUnit {
+typedef struct {
 
     char ikey[64][32];
     char fkey[64][32];
@@ -22,14 +22,21 @@ struct StorageUnit {
     uint32_t fcrsr;
     uint32_t scrsr;
 
-};
+} StorageUnit;
 
-void init_su(struct StorageUnit *su);
-void icram(struct StorageUnit *su, int val, char *key);
-void fcram(struct StorageUnit *su, float val, char *key);
-void scram(struct StorageUnit *su, char *val, char *key);
-int unit_getint(struct StorageUnit *su, char *key);
-float unit_getfloat(struct StorageUnit *su, char *key);
-char* unit_getstr(struct StorageUnit *su, char *key);
+void init_su(StorageUnit *su);
+void icram(StorageUnit *su, int val, char *key);
+void fcram(StorageUnit *su, float val, char *key);
+void scram(StorageUnit *su, char *val, char *key);
+void free_storage_unit(StorageUnit *su);
+int unit_getint(StorageUnit *su, char *key);
+float unit_getfloat(StorageUnit *su, char *key);
+char* unit_getstr(StorageUnit *su, char *key);
+char* unit_getvia_ascii(StorageUnit *su, int ascii);
+void load_file(StorageUnit *su, char *fp);
+void print_iunit(StorageUnit *su);
+void print_funit(StorageUnit *su);
+void print_sunit(StorageUnit *su);
+void print_unit(StorageUnit *su);
 
 #endif //INFBOC_STORAGEUNIT_H
